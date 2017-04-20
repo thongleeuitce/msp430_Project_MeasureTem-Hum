@@ -1,21 +1,27 @@
 #include <msp430g2553.h>
 #include <stdio.h>
-#include <intrinsics.h>
+#include <intrinsics.h>     //__no_operation();
 
-#define LED1 BIT0
-#define LED2 BIT6
-#define RX BIT1
-#define TX BIT2
-#define S2 BIT3
+#define LED1 BIT0   // P1.0
+#define RX BIT1     // P1.1
+#define TX BIT2     // P1.2
+#define S2 BIT3     // P1.3
 #define SDA BIT4    // P1.4
 #define SCK BIT5    // P1.5
+#define LED2 BIT6   // P1.6
 
-// Command SHT10
+// Initial Command for SHT10
 #define STATUS_REG_W 0x06   // binary: 0000 0110
 #define STATUS_REG_R 0x07   // binary: 0000 0111
 #define MEASURE_TEMP 0x03   // binary: 0000 0011
 #define MEASURE_HUMI 0x05   // binary: 0000 0101
 #define RESET      0x1e   // binary: 0001 1110
+
+// Initial state for SCK and SDA
+#define SCK_H P1OUT|=SCK    // SCK High
+#define SCK_L P1OUT&=~SCK   // SCK Low
+#define SDA_H P1OUT|=SDA    // SDA High
+#define SDA_L P1OUT&=~SDA   // SDA Low
 
 // 12 bit Humidity and 14 Bit Temperature
 const float C1 = -2.0468;           // for 12 Bit Humidity
@@ -26,13 +32,11 @@ const float T2 = 0.00008;           // for 12 bit Humidity
 const float D1 = -39.6;             // for 3V
 const float D2 = 0.01;              // for 14 Bit Temperature
 
-volatile unsigned int count = 0;
-volatile unsigned int i;
-
+// Function calculate temperature and humidity
 void SHT10_calculate(float *f_temperature, float *f_humidity)
 {
     *f_temperature = D1 + D2*(*f_temperature);
-    *f_humidity = C1 + C2*(*f_humidity) + C3*(*f_humidity)*(*f_humidity);
+    *f_humidity = (*f_temperature - (float) 25)*(T1 + T2*(*f_humidity)) + (C1 + C2*(*f_humidity) + C3*(*f_humidity)*(*f_humidity));
 }
 void _config_clock(void)
 {
@@ -47,16 +51,46 @@ void _config_clock(void)
 
 void _config_gpio(void)
 {
-    P1DIR = LED1 | LED2; // Set P1.0 to output direction
-    P1OUT = S2;
-    P1REN  = S2;
-}
-
-void _config_uart(void)
-{
     P1SEL = RX | TX;            // P1.1 is RX, P1.2 is TX
     P1SEL2 = RX | TX;
+    P1DIR = LED1 | LED2 | SCK;  // Set P1.0, P1.6 and P1.5 to output direction
+}
 
+void SHT10_transmission_start()
+{
+    P1DIR|=SDA;                 // set SDA to output
+    SDA_H;
+    SCK_L;
+    __no_operation();
+    SCK_H;
+    __no_operation();
+    SDA_L;
+    __no_operation();
+    SCK_L;
+    __no_operation();
+    __no_operation();
+    __no_operation();
+    SCK_H;
+    __no_operation();
+    SDA_H;
+    __no_operation();
+    SCK_L;
+    P1DIR&=~SDA;            // set SDA to input
+}
+void SHT10_reset_connection()
+{
+    unsigned int i;
+    P1DIR |= SDA;          //Change SDA to output
+    SDA_H;
+    SCK_L;
+    for(i=0;i<9;i++)       //9 SCK cycles
+    {
+        SCK_H;
+        SCK_L;
+    }
+}
+void _config_uart(void)
+{
     UCA0CTL1 = UCSWRST | UCSSEL_2;
 
     UCA0CTL0 = 0x00;
@@ -132,14 +166,13 @@ __interrupt void USCI0RX_IRS (void)
 }
 void main(void)
 {
-    float f_humidity = 1073;
-    float f_temperature = 1073;
+    float f_humidity;
+    float f_temperature;
     WDTCTL = WDTPW | WDTHOLD;       // Stop watchdog timer
     _config_clock();
     _config_gpio();
     _config_uart();
     while(1)
     {
-        SHT10_calculate(&f_temperature, &f_humidity);
     }
 }
