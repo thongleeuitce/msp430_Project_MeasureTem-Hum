@@ -1,12 +1,21 @@
 #include <msp430g2553.h>
-//#include <msp430x54xA.h>
 #include <stdio.h>
+#include <intrinsics.h>
 
 #define LED1 BIT0
 #define LED2 BIT6
 #define RX BIT1
 #define TX BIT2
 #define S2 BIT3
+#define SDA BIT4    // P1.4
+#define SCK BIT5    // P1.5
+
+// Command SHT10
+#define STATUS_REG_W 0x06   // binary: 0000 0110
+#define STATUS_REG_R 0x07   // binary: 0000 0111
+#define MEASURE_TEMP 0x03   // binary: 0000 0011
+#define MEASURE_HUMI 0x05   // binary: 0000 0101
+#define RESET      0x1e   // binary: 0001 1110
 
 volatile unsigned int count = 0;
 volatile unsigned int i;
@@ -52,17 +61,10 @@ void main(void)
     unsigned long b = 186;
 
     WDTCTL = WDTPW | WDTHOLD;       // Stop watchdog timer
-    _config_clock();
-    _config_gpio();
-    _config_uart();
-
-
     while(1)
     {
-        printf_long(a+b);
-        printf_string("\n");
-        _delay_cycles(12000000);
-        //printf_string("hello !");
+
+
     }
 }
 
