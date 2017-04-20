@@ -17,9 +17,23 @@
 #define MEASURE_HUMI 0x05   // binary: 0000 0101
 #define RESET      0x1e   // binary: 0001 1110
 
+// 12 bit Humidity and 14 Bit Temperature
+const float C1 = -2.0468;           // for 12 Bit Humidity
+const float C2 = 0.0367;            // for 12 Bit Humidity
+const float C3 = -0.0000015955;     // for 12 Bit Humidity
+const float T1 = 0.01;              // for 12 bit Humidity
+const float T2 = 0.00008;           // for 12 bit Humidity
+const float D1 = -39.6;             // for 3V
+const float D2 = 0.01;              // for 14 Bit Temperature
+
 volatile unsigned int count = 0;
 volatile unsigned int i;
 
+void SHT10_calculate(float *f_temperature, float *f_humidity)
+{
+    *f_temperature = D1 + D2*(*f_temperature);
+    *f_humidity = C1 + C2*(*f_humidity) + C3*(*f_humidity)*(*f_humidity);
+}
 void _config_clock(void)
 {
     if(CALBC1_12MHZ == 0xFF)
@@ -118,18 +132,14 @@ __interrupt void USCI0RX_IRS (void)
 }
 void main(void)
 {
-    unsigned long a = 2352;
-    unsigned long b = 186;
-    float test = 11.34;
-
+    float f_humidity = 1073;
+    float f_temperature = 1073;
     WDTCTL = WDTPW | WDTHOLD;       // Stop watchdog timer
     _config_clock();
     _config_gpio();
     _config_uart();
     while(1)
     {
-        printf_float(test,3);
-        _delay_cycles(12000000);
-
+        SHT10_calculate(&f_temperature, &f_humidity);
     }
 }
