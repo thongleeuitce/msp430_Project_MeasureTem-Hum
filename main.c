@@ -54,25 +54,13 @@ void _config_uart(void)
     IE2 = UCA0RXIE;
     _BIS_SR(GIE);
 }
-
-void main(void)
-{
-    unsigned long a = 2352;
-    unsigned long b = 186;
-
-    WDTCTL = WDTPW | WDTHOLD;       // Stop watchdog timer
-    while(1)
-    {
-
-
-    }
-}
-
-void printf_long(unsigned long number)
+void printf_int(unsigned long number)
 {
     unsigned char buffer[16];
     unsigned int i, j;
 
+    if(number < 0)
+        printf_char('-');
     if (number == 0)
     {
         printf_char('0');
@@ -97,7 +85,28 @@ void printf_string(char* string)
 {
     for (i = 0; i< strlen(string); i++)
         printf_char(string[i]);
-    _delay_cycles(12000000);
+}
+
+void printf_float(float m_float, unsigned int m_int)
+{
+    unsigned long temp;
+    float x;
+    if (m_float < 0)
+    {
+        printf_char('-');
+        m_float *= -1;
+    }
+    temp = (unsigned long) m_float;
+    printf_int(temp);
+    x = m_float - (float)temp;
+    while(m_int > 0)
+    {
+        x *= 10;
+        m_int --;
+    }
+    printf_char('.');
+    x = (unsigned long)(x + 0.5);   // Lam tron
+    printf_int(x);
 }
 
 #pragma vector = USCIAB0RX_VECTOR
@@ -106,4 +115,21 @@ __interrupt void USCI0RX_IRS (void)
     while(!(IFG2 & UCA0RXIFG));
     if (UCA0RXBUF == 'K')
         P1OUT ^= 0x01;
+}
+void main(void)
+{
+    unsigned long a = 2352;
+    unsigned long b = 186;
+    float test = 11.34;
+
+    WDTCTL = WDTPW | WDTHOLD;       // Stop watchdog timer
+    _config_clock();
+    _config_gpio();
+    _config_uart();
+    while(1)
+    {
+        printf_float(test,3);
+        _delay_cycles(12000000);
+
+    }
 }
