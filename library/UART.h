@@ -13,13 +13,14 @@
 #define RX BIT1     // P1.1
 #define TX BIT2     // P1.2
 
-void UART_init(void);						       	//Khoi tao UART
+void UART_init(void);						       	// initial UART
 void _config_clock(void);
-void UART_printf_char(unsigned char m_char);		  	//Gui chuoi ki tu
-void UART_printf_string(unsigned char* string);		   	//Goi so kieu int
-void UART_printf_int(unsigned long number);			//In ra gia tri bit cua thanh ghi
-void UART_printf_float(float m_float, unsigned int m_int);		//coma<=4
+void UART_printf_char(unsigned char m_char);		  	// Send String value
+void UART_printf_string(unsigned char* string);		   	// Send Char value
+void UART_printf_int(unsigned long number);			    // Send Int value
+void UART_printf_float(float m_float, unsigned int m_int);		// Send Float value
 
+// Function config clock (1MHz)
 void _config_clock(void)
 {
     if(CALBC1_1MHZ == 0xFF)
@@ -31,6 +32,7 @@ void _config_clock(void)
     BCSCTL2 = SELM_0 | DIVM_0;
 }
 
+// Function initial UART (BaudRate = 9600)
 void UART_init(void)
 {
 	_config_clock();
@@ -48,6 +50,7 @@ void UART_init(void)
     IE2 = UCA0RXIE;
     _BIS_SR(GIE);
 }
+
 void UART_printf_int(unsigned long number)
 {
     unsigned char buffer[16];

@@ -1,7 +1,7 @@
 # FIXED
 
 main.obj: ../main.c
-main.obj: ../library/sht10.h
+main.obj: ../library/SHT10.h
 main.obj: C:/ti/ccsv7/ccs_base/msp430/include/msp430g2553.h
 main.obj: C:/ti/ccsv7/ccs_base/msp430/include/in430.h
 main.obj: C:/ti/ccsv7/tools/compiler/ti-cgt-msp430_16.9.1.LTS/include/intrinsics.h
@@ -13,7 +13,7 @@ main.obj: ../library/UART.h
 main.obj: C:/ti/ccsv7/tools/compiler/ti-cgt-msp430_16.9.1.LTS/include/stdio.h
 
 ../main.c: 
-../library/sht10.h: 
+../library/SHT10.h: 
 C:/ti/ccsv7/ccs_base/msp430/include/msp430g2553.h: 
 C:/ti/ccsv7/ccs_base/msp430/include/in430.h: 
 C:/ti/ccsv7/tools/compiler/ti-cgt-msp430_16.9.1.LTS/include/intrinsics.h: 

@@ -2,10 +2,10 @@
  * main.c
  *
  *  Created on: Apr 19, 2017
- *      Author: ThongLee
+ *      Author: NamNguyen
  */
 
-#include "library/sht10.h"
+#include "library/SHT10.h"
 #include "library/UART.h"
 
 void main()
@@ -43,8 +43,8 @@ void main()
 		  UART_printf_string(" oC, ");
 		  UART_printf_string("Humidity: ");
 		  UART_printf_float(f_humi, 2);
-		  UART_printf_string(" %\n ");
+		  UART_printf_string(" %\n");
 		}
-		__delay_cycles(1000000);	//wait approx. 1s to avoid heating up SHT
+		__delay_cycles(1000000*10);	            // đelay 10s to avoid heating up SHT
 	}
 }

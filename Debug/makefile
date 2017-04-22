@@ -10,8 +10,8 @@ GEN_OPTS__FLAG :=
 GEN_CMDS__FLAG := 
 
 ORDERED_OBJS += \
+"./SHT10.obj" \
 "./main.obj" \
-"./sht10.obj" \
 "../lnk_msp430g2553.cmd" \
 $(GEN_CMDS__FLAG) \
 -llibc.a \
@@ -154,8 +154,8 @@ project_EmbededSystem.hex: $(EXE_OUTPUTS)
 # Other Targets
 clean:
 	-$(RM) $(BIN_OUTPUTS__QUOTED)$(EXE_OUTPUTS__QUOTED)
-	-$(RM) "main.obj" "sht10.obj" 
-	-$(RM) "main.d" "sht10.d" 
+	-$(RM) "SHT10.obj" "main.obj" 
+	-$(RM) "SHT10.d" "main.d" 
 	-@echo 'Finished clean'
 	-@echo ' '
 

@@ -9,27 +9,27 @@ CMD_SRCS += \
 ../lnk_msp430g2553.cmd 
 
 C_SRCS += \
-../main.c \
-../sht10.c 
+../SHT10.c \
+../main.c 
 
 C_DEPS += \
-./main.d \
-./sht10.d 
+./SHT10.d \
+./main.d 
 
 OBJS += \
-./main.obj \
-./sht10.obj 
+./SHT10.obj \
+./main.obj 
 
 OBJS__QUOTED += \
-"main.obj" \
-"sht10.obj" 
+"SHT10.obj" \
+"main.obj" 
 
 C_DEPS__QUOTED += \
-"main.d" \
-"sht10.d" 
+"SHT10.d" \
+"main.d" 
 
 C_SRCS__QUOTED += \
-"../main.c" \
-"../sht10.c" 
+"../SHT10.c" \
+"../main.c" 
 
 

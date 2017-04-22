@@ -1,1 +1,1 @@
-"./main.obj" "./sht10.obj" "../lnk_msp430g2553.cmd" -llibc.a 
+"./SHT10.obj" "./main.obj" "../lnk_msp430g2553.cmd" -llibc.a 

@@ -1,5 +1,5 @@
 /*
- * sht10.h
+ * SHT10.h
  *
  *  Created on: Apr 19, 2017
  *      Author: ThongLee
@@ -34,6 +34,8 @@
 #define SCK_L       	P1OUT &= ~SCK
 #define SDA_H       	P1OUT |= SDA
 #define SDA_L       	P1OUT &= ~SDA
+#define SDA_OUT         P1DIR |= SDA
+#define SDA_IN          P1DIR &= ~SDA
 
 // Function SHT10
 void SHT10_init();
