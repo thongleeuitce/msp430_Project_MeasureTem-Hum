@@ -103,7 +103,7 @@ void UART_printf_float(float m_float, unsigned int m_int)
         m_int --;
     }
     UART_printf_char('.');
-    x = (unsigned long)(x + 0.5);   // Lam tron
+//    x = (unsigned long)(x + 0.5);   // Lam tron
     UART_printf_int(x);
 }
 
