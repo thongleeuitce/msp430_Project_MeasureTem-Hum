@@ -20,6 +20,8 @@ void UART_printf_string(unsigned char* string);		   	// Send Char value
 void UART_printf_int(unsigned long number);			    // Send Int value
 void UART_printf_float(float m_float, unsigned int m_int);		// Send Float value
 
+unsigned char read_data_char = '0';
+
 // Function config clock (1MHz)
 void _config_clock(void)
 {
@@ -107,9 +109,12 @@ void UART_printf_float(float m_float, unsigned int m_int)
     UART_printf_int(x);
 }
 
+
 #pragma vector = USCIAB0RX_VECTOR
 __interrupt void USCI0RX_IRS (void)
 {
+    while(!(IFG2 & UCA0RXIFG));
+    read_data_char = UCA0RXBUF;
 }
 
 #endif	/* UART_H_ */
